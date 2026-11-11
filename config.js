@@ -1,6 +1,7 @@
-// Fill these two values from Supabase: Project Settings > API.
-// Leave both empty to keep using movies.json instead.
+// Supabase connection for Reelhouse.
+// url: the project URL only (no /rest/v1/ at the end).
+// key: the publishable key (safe to publish; security comes from the SQL policies).
 window.RH_CONFIG = {
-  url: "",   // e.g. "https://xzoghqqztpstdnokkpsd.supabase.co/rest/v1/"
-  key: ""    // the "sb_publishable_govYPMMUFDa4_WecpNhwmA_mq6COBTM" key (safe to publish; security comes from the SQL policies)
+  url: "https://xzoghqqztpstdnokkpsd.supabase.co",
+  key: "sb_publishable_govYPMMUFDa4_WecpNhwmA_mq6COBTM"
 };
