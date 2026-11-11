@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Reelhouse admin</title>
+<style>
+body{font:16px/1.5 system-ui,sans-serif;max-width:640px;margin:0 auto;padding:18px;background:#eef1f0;color:#14232b}
+@media (prefers-color-scheme:dark){body{background:#0f1a20;color:#e8efee}input,select,textarea{background:#17262e!important;color:#e8efee!important;border-color:#27393f!important}.box{background:#17262e!important}}
+h1{font-size:26px;margin:0 0 14px}.box{background:#fff;border-radius:14px;padding:16px;margin-bottom:16px}
+form{display:grid;gap:10px}label{display:grid;gap:4px;font-size:14px;opacity:.85}
+input,select,textarea{padding:10px 12px;border-radius:10px;border:1px solid #cfd8d6;font:inherit;width:100%;box-sizing:border-box}
+.chk{display:flex;gap:8px;align-items:flex-start}.chk input{width:auto;margin-top:4px}
+button{font:inherit;padding:10px 16px;border-radius:10px;border:0;background:#0f6b63;color:#fff;font-weight:600;cursor:pointer}
+button.ghost{background:none;border:1px solid #888;color:inherit}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #8884}
+#msg{min-height:1.4em;font-size:14px}
+</style></head><body>
+<h1>Reelhouse admin</h1>
+<p id="msg" role="status"></p>
+
+<section class="box" id="login">
+ <form id="lf"><label>Email<input name="email" type="email" required autocomplete="username"></label>
+ <label>Password<input name="password" type="password" required autocomplete="current-password"></label>
+ <button>Sign in</button></form>
+</section>
+
+<div id="panel" hidden>
+ <div class="box"><button class="ghost" id="out">Sign out</button></div>
+ <section class="box"><h2>Add a movie</h2>
+ <form id="af">
+  <label>Title<input name="title" required></label>
+  <label>Year<input name="year" type="number"></label>
+  <label>Genre<input name="genre" required></label>
+  <label>Quality<select name="quality"><option>HD</option><option>Full HD</option><option>4K</option><option>SD</option></select></label>
+  <label>Description<textarea name="desc" rows="3"></textarea></label>
+  <label>Cast (comma separated)<input name="cast"></label>
+  <label>Age rating<input name="rating" placeholder="PG-13"></label>
+  <label>Poster image link<input name="poster" type="url"></label>
+  <label>Trailer link<input name="trailer" type="url"></label>
+  <label>Google Drive share link<input name="drive"></label>
+  <label>Or direct video link (.mp4, .webm)<input name="url" type="url"></label>
+  <label>Second quality label (optional)<input name="q2" placeholder="4K"></label>
+  <label>Second quality Drive link<input name="drive2"></label>
+  <label class="chk"><input type="checkbox" name="rights" required><span>I own this movie or have the license to stream it.</span></label>
+  <button>Publish movie</button>
+ </form></section>
+ <section class="box"><h2>Your movies</h2><div id="list"></div></section>
+</div>
+<script src="config.js"></script>
+<script>
+const $=s=>document.querySelector(s),cfg=window.RH_CONFIG||{};
+let token=null;try{token=sessionStorage.getItem("rh_tok")}catch(e){}
+const msg=t=>{$("#msg").textContent=t||""};
+if(!cfg.url||!cfg.key){msg("Set url and key in config.js first (see SUPABASE-GUIDE.md).");$("#login").hidden=true}
+const H=()=>({apikey:cfg.key,Authorization:"Bearer "+(token||cfg.key),"Content-Type":"application/json"});
+const api=(p,o={})=>fetch(cfg.url+p,{...o,headers:{...H(),...(o.headers||{})}});
+function show(){const on=!!token;$("#login").hidden=on||!cfg.url;$("#panel").hidden=!on;if(on)load()}
+async function load(){
+ const r=await api("/rest/v1/movies?select=id,title,year,created_at&order=created_at.desc");
+ if(r.status===401){token=null;try{sessionStorage.removeItem("rh_tok")}catch(e){}msg("Session expired. Sign in again.");return show()}
+ const rows=await r.json(),box=$("#list");box.textContent="";
+ if(!rows.length){box.textContent="No movies yet.";return}
+ rows.forEach(m=>{const d=document.createElement("div");d.className="row";
+  const t=document.createElement("span");t.textContent=m.title+(m.year?" ("+m.year+")":"");
+  const b=document.createElement("button");b.className="ghost";b.textContent="Delete";
+  b.onclick=async()=>{if(!confirm("Delete "+m.title+"?"))return;
+   const x=await api("/rest/v1/movies?id=eq."+encodeURIComponent(m.id),{method:"DELETE"});
+   msg(x.ok?"Deleted.":"Couldn’t delete. Check you are listed in the admins table.");load()};
+  d.append(t,b);box.append(d)})
+}
+$("#lf").onsubmit=async e=>{e.preventDefault();msg("Signing in…");const fd=new FormData(e.target);
+ const r=await fetch(cfg.url+"/auth/v1/token?grant_type=password",{method:"POST",headers:{apikey:cfg.key,"Content-Type":"application/json"},body:JSON.stringify({email:fd.get("email"),password:fd.get("password")})});
+ const j=await r.json();
+ if(!j.access_token){msg("Sign-in failed. Check email and password.");return}
+ token=j.access_token;try{sessionStorage.setItem("rh_tok",token)}catch(x){}
+ msg("");e.target.reset();show()};
+$("#out").onclick=()=>{token=null;try{sessionStorage.removeItem("rh_tok")}catch(e){}show()};
+const did=v=>{const m=(v||"").match(/\/d\/([\w-]+)|[?&]id=([\w-]+)/);return m?(m[1]||m[2]):""};
+$("#af").onsubmit=async e=>{e.preventDefault();const fd=new FormData(e.target);
+ const d1=did(fd.get("drive")),u1=fd.get("url"),d2=did(fd.get("drive2"));
+ if(!d1&&!u1){msg("Add a Drive link or a video link.");return}
+ const sources=[{label:fd.get("quality"),...(d1?{drive:d1}:{src:u1})}];
+ if(d2&&fd.get("q2"))sources.push({label:fd.get("q2"),drive:d2});
+ const row={title:fd.get("title"),year:Number(fd.get("year"))||null,genre:fd.get("genre"),quality:fd.get("quality"),description:fd.get("desc"),cast_list:fd.get("cast"),rating:fd.get("rating"),poster:fd.get("poster")||null,trailer:fd.get("trailer")||null,sources};
+ msg("Publishing…");
+ const r=await api("/rest/v1/movies",{method:"POST",body:JSON.stringify(row)});
+ if(r.ok){msg("Published. It is live on your site now.");e.target.reset();load()}
+ else{msg(r.status===401||r.status===403?"Not allowed. Sign in, and make sure your user is in the admins table.":"Couldn’t publish. Check the fields and try again.")}};
+show();
+</script></body></html>
