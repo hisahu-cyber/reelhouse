@@ -173,7 +173,7 @@ chips();grid();
 $("#dlg").addEventListener("close",()=>{const v=$("#dlg video");if(v)v.pause();try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}});
 // Movies come from movies.json in the same folder
 const cfg=window.RH_CONFIG||{};
-(cfg.url?fetch(cfg.url+"/rest/v1/movies?select=*&order=created_at.desc",{headers:{apikey:cfg.key,Authorization:"Bearer "+cfg.key}}).then(r=>r.json()).then(rows=>(Array.isArray(rows)?rows:[]).map(r=>({title:r.title,year:r.year,genre:r.genre,quality:r.quality,desc:r.description,cast:r.cast_list,rating:r.rating,poster:r.poster,trailer:r.trailer,sources:r.sources,added:(r.created_at||"").slice(0,10)}))):fetch("movies.json").then(r=>r.json())).then(list=>{
+(cfg.url?fetch(cfg.url+"/rest/v1/movies?select=*&order=created_at.desc",{headers:{apikey:cfg.key}}).then(r=>r.json()).then(rows=>(Array.isArray(rows)?rows:[]).map(r=>({title:r.title,year:r.year,genre:r.genre,quality:r.quality,desc:r.description,cast:r.cast_list,rating:r.rating,poster:r.poster,trailer:r.trailer,sources:r.sources,added:(r.created_at||"").slice(0,10)}))):fetch("movies.json").then(r=>r.json())).then(list=>{
  const ok=u=>/^https?:\/\//.test(u||"");
  own=list.map(x=>({t:x.title,y:x.year,g:x.genre,q:x.quality,s:x.desc||"",src:x.src,drive:x.drive,sources:x.sources,added:x.added||"",poster:ok(x.poster)?x.poster:"",cast:[].concat(x.cast||[]).join(", "),rating:x.rating||"",trailer:ok(x.trailer)?x.trailer:"",h:hue(x.title||"")})).filter(m=>m.t);
  rebuild();
