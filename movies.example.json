@@ -1,0 +1,18 @@
+[
+  {
+    "title": "My First Film",
+    "year": 2024,
+    "genre": "Drama",
+    "quality": "HD",
+    "desc": "A short description shown in the movie window.",
+    "added": "2026-11-11",
+    "cast": ["Actor One", "Actor Two"],
+    "rating": "PG",
+    "poster": "https://YOUR-USERNAME.github.io/YOUR-REPO/posters/my-first-film.jpg",
+    "trailer": "https://www.youtube.com/watch?v=VIDEO_ID",
+    "sources": [
+      { "label": "HD", "drive": "GOOGLE_DRIVE_FILE_ID" },
+      { "label": "4K", "drive": "ANOTHER_DRIVE_FILE_ID" }
+    ]
+  }
+]

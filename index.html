@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reelhouse – Classic films to find and watch free</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f0;--surface:#fff;--ink:#14232b;--muted:#566872;--line:#cfd8d6;--accent:#0f6b63;--accent-ink:#fff;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0f1a20;--surface:#17262e;--ink:#e8efee;--muted:#93a6ad;--line:#27393f;--accent:#5fd0c2;--accent-ink:#06201c}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f1a20;--surface:#17262e;--ink:#e8efee;--muted:#93a6ad;--line:#27393f;--accent:#5fd0c2;--accent-ink:#06201c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Instrument Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",Georgia,sans-serif;margin:0;line-height:1.05}
+.wrap{max-width:1100px;margin:0 auto;padding:0 18px}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{font:800 22px "Bricolage Grotesque",sans-serif;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer}
+.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hero{display:grid;grid-template-columns:1fr;gap:22px;padding:10px 0 26px}
+.hero h1{font-size:clamp(34px,8vw,64px);letter-spacing:-.03em;max-width:14ch}
+.hero p{color:var(--muted);max-width:46ch;margin:12px 0 0}
+.feature{border-radius:18px;padding:22px;min-height:210px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;cursor:pointer;border:0;text-align:left;width:100%}
+.feature small{opacity:.8}
+.feature h2{font-size:34px;margin:4px 0 6px}
+.controls{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:10px 0;z-index:5}
+input[type=search]{width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px}
+.chip{white-space:nowrap;border:1px solid var(--line);background:none;border-radius:999px;padding:6px 14px}
+.chip[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;padding:14px 0 40px}
+.card{background:none;border:0;padding:0;text-align:left}
+.poster{aspect-ratio:2/3;border-radius:10px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;position:relative;overflow:hidden}
+.poster b{font:800 20px/1.05 "Bricolage Grotesque",sans-serif}
+.poster span{font-size:13px;opacity:.8}
+.poster i{position:absolute;top:10px;right:10px;font-style:normal;font-size:18px}
+.card .meta{margin-top:8px;font-size:14px;color:var(--muted)}
+.empty{grid-column:1/-1;color:var(--muted);padding:30px 0}
+dialog{border:0;border-radius:18px;padding:0;max-width:520px;width:calc(100% - 28px);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.dtop{padding:22px;color:#fff}
+.dtop h2{font-size:32px}
+.dbody{padding:18px 22px 22px}
+.dbody dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:14px 0;font-size:15px}
+.dbody dt{color:var(--muted)}.dbody dd{margin:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:10px 16px;font-weight:600;text-decoration:none;display:inline-block}
+.admin{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 18px}
+.admin form{display:grid;gap:10px}
+.admin input,.admin select,.admin textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.admin label{font-size:14px;color:var(--muted);display:grid;gap:4px}
+.admin .chk{display:flex;gap:8px;align-items:flex-start}.admin .chk input{width:auto;margin-top:4px}
+.badge{position:absolute;bottom:10px;right:10px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px}
+video{width:100%;border-radius:10px;background:#000;margin-bottom:12px}
+.poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sel{display:flex;gap:8px;padding-top:8px}.sel select{flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.rrow{display:grid;grid-auto-flow:column;grid-auto-columns:140px;gap:14px;overflow-x:auto;padding-bottom:6px}
+#recent h3{font-size:22px;margin:6px 0 10px}
+.note{font-size:13px;color:var(--muted);padding:0 0 30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header><div class="logo">Reelhouse</div><button class="ghost" id="wl">Watchlist (0)</button></header>
+ <section class="hero">
+  <div><h1>Classic films you can watch for free.</h1><p>Browse classics, or watch movies added by this site’s owner.</p></div>
+  <button class="feature" id="feature" aria-label="Open featured film"></button>
+ </section>
+ <section class="admin" id="admin" hidden><h3>Add a movie</h3><form id="f"><label>Title<input name="title" required></label><label>Year<input name="year" type="number"></label><label>Genre<input name="genre" required></label><label>Quality label<select name="quality"><option>HD</option><option>Full HD</option><option>4K</option><option>SD</option></select></label><label>Description<textarea name="desc" rows="3"></textarea></label><label>Google Drive share link<input name="drive" placeholder="https://drive.google.com/file/d/…/view"></label><label>Or direct video link (.mp4, .webm)<input name="url" type="url"></label><label>Cast (comma separated, optional)<input name="cast"></label><label>Age rating (optional)<input name="rating" placeholder="PG-13"></label><label>Poster image link (optional)<input name="poster" type="url"></label><label>Trailer link (optional)<input name="trailer" type="url"></label><label>Second quality label (optional)<input name="q2" placeholder="4K"></label><label>Second quality Drive link<input name="drive2"></label>
+<label class="chk"><input type="checkbox" name="rights" required><span>I own this movie or have the license to stream it.</span></label><button class="btn">Generate entry</button><label>Copy this into movies.json, then commit<textarea id="out" rows="7" readonly></textarea></label></form></section>
+ <div class="controls">
+  <input type="search" id="q" placeholder="Search by title, actor, director or year" aria-label="Search films">
+  <div class="sel"><select id="sort" aria-label="Sort"><option value="new">Newest added</option><option value="year">Release year</option><option value="az">A to Z</option></select><select id="ql" aria-label="Quality"><option>All</option><option>4K</option><option>Full HD</option><option>HD</option><option>SD</option></select></div>
+  <div class="chips" id="chips"></div>
+ </div>
+ <section id="recent" hidden></section>
+ <main class="grid" id="grid"></main>
+ <p class="note">Films listed are in the public domain. Availability and quality of each copy on the Internet Archive may vary.</p>
+</div>
+<dialog id="dlg"></dialog>
+<script>
+const C=[
+{t:"Nosferatu",y:1922,d:"F. W. Murnau",g:"Horror",r:94,h:150,s:"A real-estate clerk travels to Transylvania and brings back a vampire who spreads plague through his town."},
+{t:"Metropolis",y:1927,d:"Fritz Lang",g:"Sci-Fi",r:153,h:215,s:"In a towering future city, the son of its ruler joins a worker uprising against a brutal class divide."},
+{t:"The General",y:1926,d:"Buster Keaton",g:"Comedy",r:78,h:35,s:"A railroad engineer chases the Union soldiers who stole his locomotive during the Civil War."},
+{t:"A Trip to the Moon",y:1902,d:"Georges Méliès",g:"Sci-Fi",r:14,h:260,s:"Astronomers launch a capsule at the Moon’s face and meet its strange inhabitants."},
+{t:"Night of the Living Dead",y:1968,d:"George A. Romero",g:"Horror",r:96,h:0,s:"Strangers barricade themselves in a farmhouse as the recently dead rise and attack."},
+{t:"His Girl Friday",y:1940,d:"Howard Hawks",g:"Comedy",r:92,h:20,s:"A fast-talking editor tries to win back his ex-wife and star reporter before she remarries."},
+{t:"Charade",y:1963,d:"Stanley Donen",g:"Thriller",r:113,h:195,s:"A widow in Paris is hunted by men who want the money her husband hid."},
+{t:"The Cabinet of Dr. Caligari",y:1920,d:"Robert Wiene",g:"Horror",r:76,h:290,s:"A hypnotist and his sleepwalking subject are linked to a string of murders in a distorted town."},
+{t:"The Kid",y:1921,d:"Charlie Chaplin",g:"Comedy",r:68,h:45,s:"The Tramp raises an abandoned child until authorities try to take him away."},
+{t:"Sherlock Jr.",y:1924,d:"Buster Keaton",g:"Comedy",r:45,h:175,s:"A projectionist dreams himself into the movie he is screening to solve a theft."},
+{t:"Detour",y:1945,d:"Edgar G. Ulmer",g:"Noir",r:68,h:230,s:"A hitchhiking pianist is dragged into a spiral of bad luck and worse choices."},
+{t:"D.O.A.",y:1950,d:"Rudolph Maté",g:"Noir",r:83,h:5,s:"A man poisoned with a slow-acting toxin has one day to find his own killer."},
+{t:"The Phantom of the Opera",y:1925,d:"Rupert Julian",g:"Horror",r:93,h:320,s:"A disfigured composer haunts the Paris Opera and obsesses over a young singer."},
+{t:"Safety Last!",y:1923,d:"Fred C. Newmeyer, Sam Taylor",g:"Comedy",r:70,h:60,s:"A small-town clerk fakes success in the city, then climbs a skyscraper for a publicity stunt."},
+{t:"Carnival of Souls",y:1962,d:"Herk Harvey",g:"Horror",r:78,h:180,s:"A woman who survives a car crash is pulled toward an abandoned pavilion by ghostly figures."},
+{t:"Battleship Potemkin",y:1925,d:"Sergei Eisenstein",g:"Drama",r:75,h:350,s:"Sailors mutiny against their officers, and the unrest spreads to the harbor town of Odessa."}
+];
+const $=s=>document.querySelector(s);
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let F=[...C],own=[],db=null,asset=null,isAdmin=false;
+const hue=t=>[...t].reduce((a,c)=>(a*31+c.charCodeAt(0))%360,7);
+const rebuild=()=>{F=[...own,...C];if(!genres.includes(genre))genre="All";genres.length=0;genres.push("All",...new Set(F.map(f=>f.g)),"Watchlist");chips();grid()};
+let wl=[],genre="All",query="";
+try{wl=JSON.parse(localStorage.getItem("rh_wl")||"[]")}catch(e){}
+const save=()=>{try{localStorage.setItem("rh_wl",JSON.stringify(wl))}catch(e){}};
+const bg=f=>`linear-gradient(155deg,hsl(${f.h},45%,32%),hsl(${(f.h+35)%360},50%,12%))`;
+const genres=["All",...new Set(C.map(f=>f.g)),"Watchlist"];
+function chips(){$("#chips").innerHTML=genres.map(g=>`<button class="chip" aria-pressed="${g===genre}" data-g="${g}">${g}</button>`).join("");}
+let qual="All",sort="new",cur=null;
+const slug=t=>t.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const card=f=>`<button class="card" data-t="${esc(f.t)}"><div class="poster" style="background:${bg(f)}">${f.poster?`<img src="${esc(f.poster)}" alt="${esc(f.t)} poster" loading="lazy">`:""}${wl.includes(f.t)?"<i>★</i>":""}${f.poster?"":`<b>${esc(f.t)}</b><span>${f.y||""}</span>`}${(f.src||f.drive||f.sources)?`<em class="badge">${esc(f.q||"HD")}</em>`:""}</div><div class="meta">${esc(f.t)}${f.y?" ("+f.y+")":""}</div></button>`;
+function grid(){
+ const q=query.toLowerCase();
+ const list=F.filter(f=>(genre==="All"||(genre==="Watchlist"?wl.includes(f.t):f.g===genre))&&(qual==="All"||f.q===qual)&&(f.t+(f.d||"")+(f.y||"")+(f.cast||"")).toLowerCase().includes(q));
+ if(sort==="az")list.sort((a,b)=>a.t.localeCompare(b.t));
+ else if(sort==="year")list.sort((a,b)=>(b.y||0)-(a.y||0));
+ $("#grid").innerHTML=list.length?list.map(card).join(""):`<p class="empty">${genre==="Watchlist"?"Your watchlist is empty. Open a film and tap Add to watchlist.":"No films match. Try a different title, genre or quality."}</p>`;
+ const rec=own.filter(m=>m.added).sort((a,b)=>b.added.localeCompare(a.added)).slice(0,8);
+ const show=rec.length&&genre==="All"&&!q&&qual==="All";
+ $("#recent").hidden=!show;$("#recent").innerHTML=show?`<h3>Recently added</h3><div class="rrow">${rec.map(card).join("")}</div>`:"";
+ $("#wl").textContent=`Watchlist (${wl.length})`;
+}
+const player=s=>s.drive?`<iframe title="Movie player" src="https://drive.google.com/file/d/${esc(s.drive)}/preview" allow="autoplay;fullscreen" allowfullscreen style="width:100%;aspect-ratio:16/9;border:0;border-radius:10px;margin-bottom:12px"></iframe>`:`<video controls playsinline preload="metadata" data-k="${esc(s.src)}" src="${esc(s.src)}"></video>`;
+function resume(){
+ const v=$("#dlg video");if(!v)return;const k="rh_t_"+v.dataset.k;
+ try{const t=+localStorage.getItem(k);if(t>5)v.addEventListener("loadedmetadata",()=>{v.currentTime=t},{once:true})}catch(e){}
+ v.addEventListener("timeupdate",()=>{try{localStorage.setItem(k,v.currentTime)}catch(e){}});
+}
+function open(t){
+ const f=F.find(x=>x.t===t);if(!f)return;
+ const on=wl.includes(t);
+ const srcs=f.sources&&f.sources.length?f.sources:(f.src||f.drive?[{label:f.q||"HD",src:f.src,drive:f.drive}]:[]);
+ cur=srcs;
+ const link="https://archive.org/search?query="+encodeURIComponent(f.t+" "+(f.y||""));
+ const act=srcs.length?"":`<a class="btn" href="${link}" target="_blank" rel="noopener">Watch on Internet Archive</a>`;
+ const tr=f.trailer?`<a class="ghost" style="text-decoration:none" href="${esc(f.trailer)}" target="_blank" rel="noopener">Trailer</a>`:"";
+ const sim=F.filter(x=>x.g===f.g&&x.t!==f.t).sort((a,b)=>(b.src||b.drive?1:0)-(a.src||a.drive?1:0)).slice(0,6);
+ const qs=srcs.length>1?`<div class="row" style="margin:0 0 12px">${srcs.map((s,i)=>`<button class="chip" data-q="${i}" aria-pressed="${i===0}">${esc(s.label)}</button>`).join("")}</div>`:"";
+ $("#dlg").innerHTML=`<div class="dtop" style="background:${bg(f)}"><small>${f.y||""}</small><h2>${esc(f.t)}</h2></div><div class="dbody"><div id="pl">${srcs[0]?player(srcs[0]):""}</div>${qs}<p>${esc(f.s)}</p><dl><dt>Director</dt><dd>${esc(f.d||"n/a")}</dd><dt>Genre</dt><dd>${esc(f.g)}</dd>${f.cast?`<dt>Cast</dt><dd>${esc(f.cast)}</dd>`:""}${f.rating?`<dt>Rated</dt><dd>${esc(f.rating)}</dd>`:""}${f.r?`<dt>Runtime</dt><dd>${f.r} min</dd>`:""}</dl><div class="row">${act}${tr}<button class="ghost" data-add="${esc(t)}">${on?"Remove from watchlist":"Add to watchlist"}</button><button class="ghost" data-share="${esc(t)}">Share</button><button class="ghost" data-close>Close</button></div>${sim.length?`<h3 style="font-size:18px;margin:20px 0 10px">More like this</h3><div class="rrow">${sim.map(card).join("")}</div>`:""}</div>`;
+ if(!$("#dlg").open)$("#dlg").showModal();
+ $("#dlg").scrollTop=0;resume();
+ try{history.replaceState(null,"","#"+slug(t))}catch(e){}
+}
+const feat=C[1];
+$("#feature").style.background=bg(feat);
+$("#feature").innerHTML=`<small>Featured, ${feat.y}</small><h2>${feat.t}</h2><span>${feat.s}</span>`;
+$("#feature").onclick=()=>open(feat.t);
+$("#chips").onclick=e=>{const g=e.target.dataset.g;if(g){genre=g;chips();grid()}};
+document.addEventListener("click",e=>{const c=e.target.closest(".card");if(c)open(c.dataset.t)});
+$("#sort").onchange=e=>{sort=e.target.value;grid()};
+$("#ql").onchange=e=>{qual=e.target.value;grid()};
+$("#q").oninput=e=>{query=e.target.value;grid()};
+$("#wl").onclick=()=>{genre="Watchlist";chips();grid();$("#grid").scrollIntoView()};
+$("#dlg").onclick=e=>{
+ if(e.target===$("#dlg")||e.target.dataset.close!==undefined)$("#dlg").close();
+ const qi=e.target.dataset.q;
+ if(qi!==undefined&&cur){$("#pl").innerHTML=player(cur[qi]);resume();$("#dlg").querySelectorAll("[data-q]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.q===qi))}
+ const sh=e.target.dataset.share;
+ if(sh){const u=location.href.split("#")[0]+"#"+slug(sh);try{navigator.share?navigator.share({title:sh,url:u}):navigator.clipboard.writeText(u).then(()=>{e.target.textContent="Link copied"})}catch(x){}}
+ const dl=e.target.dataset.del;
+ if(dl&&db&&confirm("Delete this movie?")){db.collection("movies").doc(dl).delete().then(()=>$("#dlg").close())}
+ const a=e.target.dataset.add;
+ if(a){wl=wl.includes(a)?wl.filter(x=>x!==a):[...wl,a];save();grid();open(a)}
+};
+chips();grid();
+$("#dlg").addEventListener("close",()=>{const v=$("#dlg video");if(v)v.pause();try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}});
+// Movies come from movies.json in the same folder
+fetch("movies.json").then(r=>r.json()).then(list=>{
+ const ok=u=>/^https?:\/\//.test(u||"");
+ own=list.map(x=>({t:x.title,y:x.year,g:x.genre,q:x.quality,s:x.desc||"",src:x.src,drive:x.drive,sources:x.sources,added:x.added||"",poster:ok(x.poster)?x.poster:"",cast:[].concat(x.cast||[]).join(", "),rating:x.rating||"",trailer:ok(x.trailer)?x.trailer:"",h:hue(x.title||"")})).filter(m=>m.t);
+ rebuild();
+ const h=location.hash.slice(1);
+ if(h&&h!=="admin"){const m=F.find(x=>slug(x.t)===h);if(m)open(m.t)}
+}).catch(()=>{});
+if(location.hash==="#admin")$("#admin").hidden=false;
+$("#f").onsubmit=e=>{
+ e.preventDefault();const fd=new FormData(e.target);
+ const id=v=>{const m=(v||"").match(/\/d\/([\w-]+)|[?&]id=([\w-]+)/);return m?(m[1]||m[2]):""};
+ const o={title:fd.get("title"),year:Number(fd.get("year"))||null,genre:fd.get("genre"),quality:fd.get("quality"),desc:fd.get("desc"),added:new Date().toISOString().slice(0,10)};
+ if(fd.get("cast"))o.cast=fd.get("cast").split(",").map(x=>x.trim()).filter(Boolean);
+ if(fd.get("rating"))o.rating=fd.get("rating");
+ if(fd.get("poster"))o.poster=fd.get("poster");
+ if(fd.get("trailer"))o.trailer=fd.get("trailer");
+ const d1=id(fd.get("drive")),u1=fd.get("url"),d2=id(fd.get("drive2"));
+ if(!d1&&!u1){$("#out").value="Add a Drive link or a video link.";return}
+ const first=d1?{drive:d1}:{src:u1};
+ if(d2&&fd.get("q2"))o.sources=[{label:fd.get("quality"),...first},{label:fd.get("q2"),drive:d2}];
+ else Object.assign(o,first);
+ $("#out").value=JSON.stringify(o,null,2)+",";
+};
+</script>
+</body>
+</html>
