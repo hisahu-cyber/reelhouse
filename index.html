@@ -82,6 +82,7 @@ video{width:100%;border-radius:10px;background:#000;margin-bottom:12px}
  <p class="note">Films listed are in the public domain. Availability and quality of each copy on the Internet Archive may vary.</p>
 </div>
 <dialog id="dlg"></dialog>
+<script src="config.js"></script>
 <script>
 const C=[
 {t:"Nosferatu",y:1922,d:"F. W. Murnau",g:"Horror",r:94,h:150,s:"A real-estate clerk travels to Transylvania and brings back a vampire who spreads plague through his town."},
@@ -171,7 +172,8 @@ $("#dlg").onclick=e=>{
 chips();grid();
 $("#dlg").addEventListener("close",()=>{const v=$("#dlg video");if(v)v.pause();try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}});
 // Movies come from movies.json in the same folder
-fetch("movies.json").then(r=>r.json()).then(list=>{
+const cfg=window.RH_CONFIG||{};
+(cfg.url?fetch(cfg.url+"/rest/v1/movies?select=*&order=created_at.desc",{headers:{apikey:cfg.key,Authorization:"Bearer "+cfg.key}}).then(r=>r.json()).then(rows=>(Array.isArray(rows)?rows:[]).map(r=>({title:r.title,year:r.year,genre:r.genre,quality:r.quality,desc:r.description,cast:r.cast_list,rating:r.rating,poster:r.poster,trailer:r.trailer,sources:r.sources,added:(r.created_at||"").slice(0,10)}))):fetch("movies.json").then(r=>r.json())).then(list=>{
  const ok=u=>/^https?:\/\//.test(u||"");
  own=list.map(x=>({t:x.title,y:x.year,g:x.genre,q:x.quality,s:x.desc||"",src:x.src,drive:x.drive,sources:x.sources,added:x.added||"",poster:ok(x.poster)?x.poster:"",cast:[].concat(x.cast||[]).join(", "),rating:x.rating||"",trailer:ok(x.trailer)?x.trailer:"",h:hue(x.title||"")})).filter(m=>m.t);
  rebuild();
