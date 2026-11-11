@@ -52,7 +52,7 @@ const $=s=>document.querySelector(s),cfg=window.RH_CONFIG||{};
 let token=null;try{token=sessionStorage.getItem("rh_tok")}catch(e){}
 const msg=t=>{$("#msg").textContent=t||""};
 if(!cfg.url||!cfg.key){msg("Set url and key in config.js first (see SUPABASE-GUIDE.md).");$("#login").hidden=true}
-const H=()=>({apikey:cfg.key,Authorization:"Bearer "+(token||cfg.key),"Content-Type":"application/json"});
+const H=()=>({apikey:cfg.key,...(token?{Authorization:"Bearer "+token}:{}),"Content-Type":"application/json"});
 const api=(p,o={})=>fetch(cfg.url+p,{...o,headers:{...H(),...(o.headers||{})}});
 function show(){const on=!!token;$("#login").hidden=on||!cfg.url;$("#panel").hidden=!on;if(on)load()}
 async function load(){
